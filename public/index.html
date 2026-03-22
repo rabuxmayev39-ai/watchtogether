@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WatchTogether</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x25B6;</text></svg>">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}::-webkit-scrollbar{width:0}
+:root{--bg:#000;--s1:rgba(255,255,255,0.03);--s2:rgba(255,255,255,0.06);--b1:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.1);--t1:#fff;--t2:rgba(255,255,255,0.5);--t3:rgba(255,255,255,0.25);--ac:#0a84ff;--acbg:rgba(10,132,255,0.1);--gr:#30d158;--yl:#ffd60a;--f:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;--r:14px;--rs:10px}
+body{background:var(--bg);color:var(--t1);font-family:var(--f);-webkit-font-smoothing:antialiased;min-height:100vh}
+input::placeholder{color:var(--t3)}input:focus,button:focus{outline:none}button{font-family:var(--f);cursor:pointer}button:active{transform:scale(0.97)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+@keyframes emojiFloat{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1}100%{opacity:0;transform:translateY(-180px) scale(1.3) rotate(12deg)}}
+.hidden{display:none!important}
+.login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;animation:fadeIn .6s ease}
+.login-dot{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#5ac8fa);margin-bottom:24px}
+.login-title{font-size:28px;font-weight:700;letter-spacing:-1px;margin-bottom:6px}
+.login-sub{font-size:15px;color:var(--t2);margin-bottom:36px}
+.login-input{width:100%;max-width:300px;padding:14px 18px;background:var(--s1);border:1px solid var(--b1);border-radius:12px;color:var(--t1);font-size:16px;text-align:center;margin-bottom:12px}
+.login-btn{width:100%;max-width:300px;padding:14px;background:var(--ac);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:600;transition:opacity .2s}
+.login-btn:disabled{opacity:.4}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+.nav-left{display:flex;align-items:center;gap:10px}
+.nav-dot{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#5ac8fa)}
+.nav-brand{font-size:17px;font-weight:600;letter-spacing:-.3px}
+.nav-right{display:flex;align-items:center;gap:12px}
+.st-pill{display:flex;align-items:center;gap:6px;background:var(--s1);padding:5px 12px;border-radius:20px}
+.st-dot{width:7px;height:7px;border-radius:50%;animation:pulse 2.5s infinite}
+.st-dot.on{background:var(--gr)}.st-dot.off{background:#48484a}
+.nav-btn{background:var(--s1);border:none;color:var(--t2);padding:6px 16px;border-radius:20px;font-size:13px;font-weight:500}
+.home-wrap{max-width:680px;margin:0 auto;padding:12px 24px 80px;animation:fadeIn .6s ease}
+.hero{padding:64px 0 48px;text-align:center}
+.hero-label{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--ac);margin-bottom:12px}
+.hero-heading{font-size:40px;font-weight:700;letter-spacing:-1.5px;line-height:1.1;margin-bottom:40px;background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,.5));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.input-card{background:var(--s1);border-radius:16px;border:1px solid var(--b1);padding:6px;max-width:480px;margin:0 auto}
+.input-card input{width:100%;padding:14px 16px;background:transparent;border:none;color:var(--t1);font-size:15px}
+.input-divider{height:1px;background:var(--b1);margin:0 12px}
+.primary-btn{display:block;width:calc(100% - 8px);margin:4px;padding:12px 24px;background:var(--ac);border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:600;transition:opacity .2s}
+.primary-btn:disabled{opacity:.4}
+.section{margin-top:48px}.section-label{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:16px}
+.fav-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.fav-card{min-width:140px;padding:16px 14px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+.fav-icon{width:36px;height:36px;border-radius:var(--rs);background:var(--acbg);display:flex;align-items:center;justify-content:center;font-size:20px}
+.fav-name{font-size:14px;font-weight:600}.fav-sn{font-size:22px;font-weight:700;letter-spacing:-1px}.fav-ss{font-size:12px;color:var(--t3)}
+.recent-list{display:flex;flex-direction:column;gap:2px}
+.recent-row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:12px;background:var(--s1)}
+.r-title{font-size:15px;font-weight:500}.r-date{font-size:12px;color:var(--t3);margin-top:3px}
+.r-right{display:flex;align-items:center;gap:12px}.r-rating{font-size:18px;font-weight:700;color:var(--ac)}
+.fav-toggle{background:none;border:none;font-size:18px;color:var(--yl)}
+.empty-msg{color:var(--t3);font-size:14px;padding:24px;text-align:center}
+.watch-wrap{width:100%;height:100vh;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.watch-nav{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(0,0,0,.6);backdrop-filter:blur(40px);border-bottom:.5px solid var(--b1);z-index:10}
+.back-btn{background:none;border:none;color:var(--ac);font-size:15px;font-weight:500}
+.w-center{display:flex;flex-direction:column;align-items:center;gap:3px}
+.w-title{font-size:15px;font-weight:600}.w-status{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t3)}
+.done-btn{background:var(--s2);border:none;color:var(--ac);padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+.video-area{flex:1;display:flex;flex-direction:column;padding:12px;gap:10px}
+.video-frame{flex:1;background:rgba(255,255,255,.02);border-radius:var(--r);position:relative;overflow:hidden;border:.5px solid var(--b1)}
+.video-frame iframe{width:100%;height:100%;border:none;border-radius:var(--r)}
+.placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.ph-icon{width:56px;height:56px;border-radius:50%;background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--t3)}
+.ph-text{font-size:14px;color:var(--t3)}
+.controls{display:flex;align-items:center;gap:8px}
+.ctrl-btn{width:40px;height:40px;border-radius:50%;background:var(--s2);border:none;display:flex;align-items:center;justify-content:center}
+.ctrl-div{width:1px;height:20px;background:var(--b1)}
+.emoji-tray{display:flex;gap:2px;padding:4px 8px;background:var(--s1);border-radius:24px;animation:scaleIn .2s ease}
+.emoji-tray button{background:none;border:none;font-size:20px;padding:4px 5px}
+.chat-btn{width:40px;height:40px;border-radius:50%;background:var(--ac);border:none;font-size:16px;display:flex;align-items:center;justify-content:center;margin-left:auto}
+.floating-emoji{position:absolute;font-size:2rem;pointer-events:none;z-index:100;animation:emojiFloat 2.2s cubic-bezier(.23,1,.32,1) forwards}
+.chat-panel{position:absolute;bottom:80px;right:16px;width:300px;max-height:420px;background:rgba(28,28,30,.88);backdrop-filter:blur(40px);border-radius:18px;border:.5px solid var(--b2);display:flex;flex-direction:column;z-index:20;animation:scaleIn .3s ease;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.chat-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:.5px solid var(--b1);font-size:15px;font-weight:600}
+.chat-x{background:none;border:none;color:var(--t2);font-size:18px}
+.chat-body{flex:1;overflow-y:auto;padding:12px 14px 6px;display:flex;flex-direction:column;gap:6px;max-height:280px}
+.msg-row{display:flex}.msg-row.me{justify-content:flex-end}
+.msg-bub{max-width:78%;border-radius:18px;padding:8px 14px;background:var(--s2);border-bottom-left-radius:4px}
+.msg-row.me .msg-bub{background:var(--ac);border-bottom-left-radius:18px;border-bottom-right-radius:4px}
+.msg-name{font-size:11px;font-weight:600;color:var(--ac);display:block;margin-bottom:2px}
+.msg-row.me .msg-name{color:rgba(255,255,255,.7)}
+.msg-txt{font-size:14px;line-height:1.35}
+.chat-foot{display:flex;gap:8px;padding:10px 12px 12px;border-top:.5px solid var(--b1)}
+.chat-foot input{flex:1;padding:8px 14px;background:var(--s1);border:.5px solid var(--b1);border-radius:20px;color:var(--t1);font-size:14px}
+.send-btn{width:34px;height:34px;border-radius:50%;background:var(--ac);border:none;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center}
+.rate-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(20px);display:flex;align-items:flex-end;justify-content:center;z-index:999;padding:16px;animation:fadeIn .3s ease}
+.rate-modal{width:100%;max-width:400px;background:rgba(28,28,30,.95);backdrop-filter:blur(40px);border-radius:20px;padding:20px 28px 28px;border:.5px solid var(--b2);text-align:center;animation:scaleIn .35s ease;margin-bottom:40px}
+.rate-pill{width:36px;height:5px;border-radius:3px;background:rgba(255,255,255,.15);margin:0 auto 20px}
+.rate-label{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:6px}
+.rate-film{font-size:28px;font-weight:700;letter-spacing:-1px;margin-bottom:24px}
+.rdots{display:flex;gap:6px;justify-content:center;margin-bottom:8px}
+.rdot{width:28px;height:28px;border-radius:50%;border:none;background:var(--s2);font-size:11px;font-weight:600;color:var(--t3);transition:all .2s ease;display:flex;align-items:center;justify-content:center}
+.rdot.on{background:linear-gradient(135deg,var(--ac),#5ac8fa);color:#fff;transform:scale(1.1)}
+.rval{font-size:42px;font-weight:700;letter-spacing:-2px;margin:8px 0 20px}.rval span{font-size:18px;color:var(--t3);font-weight:400}
+.rate-acts{display:flex;gap:10px}
+.rbtn2{flex:1;padding:13px;background:var(--s2);border:none;border-radius:12px;color:var(--t2);font-size:15px;font-weight:600}
+.rbtn1{flex:1;padding:13px;background:var(--ac);border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:600;transition:opacity .2s}
+.rbtn1:disabled{opacity:.4}
+.hist-wrap{max-width:680px;margin:0 auto;padding:12px 24px 80px;animation:fadeIn .5s ease}
+.hist-nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0 24px}
+.hist-title{font-size:17px;font-weight:600}
+.hist-stats{display:flex;gap:8px;margin-bottom:32px}
+.stat-card{flex:1;padding:18px 16px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;gap:4px}
+.stat-num{font-size:28px;font-weight:700;letter-spacing:-1px}
+.stat-lbl{font-size:12px;color:var(--t3);font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.hist-list{display:flex;flex-direction:column;gap:4px}
+.hist-card{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:var(--r);background:var(--s1)}
+.hist-poster{width:40px;height:40px;border-radius:var(--rs);background:var(--acbg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hist-info{flex:1;min-width:0}.hist-name{font-size:15px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.hist-meta{font-size:12px;color:var(--t3);display:block;margin-top:2px}
+.hist-scores{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.hist-sp{display:flex;flex-direction:column;align-items:center;gap:1px}
+.hist-sl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.hist-sv{font-size:18px;font-weight:700;color:var(--ac)}
+.hist-sd{width:1px;height:24px;background:var(--b1)}
+.hist-fav{background:none;border:none;font-size:20px;color:var(--yl)}
+@media(max-width:500px){.hero-heading{font-size:30px}.hist-stats{flex-direction:column}.chat-panel{width:calc(100% - 32px)}}
+</style>
+</head>
+<body>
+<div id="login-view" class="login-screen">
+<div class="login-dot"></div>
+<h1 class="login-title">WatchTogether</h1>
+<p class="login-sub">Enter your name to start</p>
+<input class="login-input" id="ni" placeholder="Your name" maxlength="20" autofocus>
+<button class="login-btn" id="lb" disabled>Join Room</button>
+</div>
+<div id="home-view" class="hidden"></div>
+<div id="watch-view" class="hidden"></div>
+<div id="hist-view" class="hidden"></div>
+<div id="rate-overlay" class="rate-overlay hidden">
+<div class="rate-modal">
+<div class="rate-pill"></div>
+<p class="rate-label">How was it?</p>
+<h2 class="rate-film" id="rate-film-title"></h2>
+<div class="rdots" id="rdots"></div>
+<div class="rval" id="rval">&#8212;<span>/10</span></div>
+<div class="rate-acts">
+<button class="rbtn2" id="rate-skip">Skip</button>
+<button class="rbtn1" id="rate-save" disabled>Save Rating</button>
+</div>
+</div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(function(){
+const EM=["\u2764\uFE0F","\uD83D\uDE02","\uD83D\uDE31","\uD83D\uDD25","\uD83D\uDC4F","\uD83D\uDE22","\uD83E\uDD2F","\uD83D\uDC80","\uD83D\uDE0D","\uD83D\uDC4E"];
+let socket,me;
+let hist=[],users=[],msgs=[];
+let st={url:"",title:"",playing:false};
+let chatOn=false,emojiOn=false;
+let rating=0;
+function esc(s){const d=document.createElement("div");d.textContent=s||"";return d.innerHTML}
+function $(id){return document.getElementById(id)}
+function show(id){["login-view","home-view","watch-view","hist-view"].forEach(v=>{$(v).classList.toggle("hidden",v!==id)})}
+$("ni").addEventListener("input",()=>{$("lb").disabled=!$("ni").value.trim()});
+$("ni").addEventListener("keydown",e=>{if(e.key==="Enter"&&$("ni").value.trim())login($("ni").value.trim())});
+$("lb").addEventListener("click",()=>{if($("ni").value.trim())login($("ni").value.trim())});
+function login(name){
+me=name;
+socket=io({query:{username:me}});
+socket.on("sync-state",s=>{hist=s.history||[];users=s.onlineUsers||[];if(s.currentUrl){st.url=s.currentUrl;st.title=s.currentTitle;st.playing=s.isPlaying;showWatch()}else showHome();});
+socket.on("users-update",u=>{users=u;updateStatus()});
+socket.on("video-loaded",({url,title})=>{st.url=url;st.title=title;st.playing=true;showWatch()});
+socket.on("play",()=>{st.playing=true;updatePlayBtn()});
+socket.on("pause",()=>{st.playing=false;updatePlayBtn()});
+socket.on("chat-message",m=>{msgs.push(m);appendMsg(m)});
+socket.on("emoji",({emoji})=>spawnEmoji(emoji));
+socket.on("history-update",h=>{hist=h});
+socket.on("video-stopped",()=>{st.url="";st.title="";closeRating();showHome()});
+}
+function showHome(){
+show("home-view");
+const favs=hist.filter(h=>h.favorite);
+const on=users.length>1;
+const partner=users.filter(u=>u!==me).join(", ");
+$("home-view").innerHTML='<div class="home-wrap"><nav class="nav"><div class="nav-left"><div class="nav-dot"></div><span class="nav-brand">WatchTogether</span></div><div class="nav-right"><div class="st-pill"><div class="st-dot '+(on?"on":"off")+'"></div><span style="font-size:13px;color:var(--t2)">'+(on?esc(partner)+" online":"Waiting...")+'</span></div><button class="nav-btn" id="go-hist">History</button></div></nav><div class="hero"><p class="hero-label">Movie Night</p><h1 class="hero-heading">What are we watching?</h1><div class="input-card"><input id="ti" placeholder="Film title"><div class="input-divider"></div><input id="ui" placeholder="Paste video URL"><button class="primary-btn" id="wb" disabled>Watch Now</button></div></div>'+(favs.length?'<section class="section"><h2 class="section-label">Favorites</h2><div class="fav-scroll">'+favs.map(f=>'<div class="fav-card"><div class="fav-icon">&#127916;</div><span class="fav-name">'+esc(f.title)+'</span><div><span class="fav-sn">'+f.rating+'</span><span class="fav-ss">/10</span></div></div>').join('')+'</div></section>':'')+'<section class="section"><h2 class="section-label">Recently Watched</h2><div class="recent-list">'+(hist.length?hist.slice(0,6).map(f=>'<div class="recent-row"><div><span class="r-title">'+esc(f.title)+'</span><div class="r-date">'+f.date+'</div></div><div class="r-right"><span class="r-rating">'+f.rating+'</span><button class="fav-toggle" data-fid="'+f.id+'">'+(f.favorite?"&#9733;":"&#9734;")+'</button></div></div>').join(''):'<p class="empty-msg">No films yet. Paste a URL above!</p>')+'</div></section></div>';
+$("ui").addEventListener("input",()=>{$("wb").disabled=!$("ui").value.trim()});
+$("ui").addEventListener("keydown",e=>{if(e.key==="Enter")startWatch()});
+$("ti").addEventListener("keydown",e=>{if(e.key==="Enter")$("ui").focus()});
+$("wb").addEventListener("click",startWatch);
+$("go-hist").addEventListener("click",showHist);
+document.querySelectorAll("[data-fid]").forEach(b=>b.addEventListener("click",()=>socket.emit("toggle-favorite",+b.dataset.fid)));
+}
+function startWatch(){
+const url=$("ui")?.value?.trim();
+const title=$("ti")?.value?.trim()||"Untitled Film";
+if(!url)return;
+st.url=url;st.title=title;st.playing=true;
+socket.emit("load-video",{url,title});
+showWatch();
+}
+let watchBuilt=false;
+function showWatch(){
+show("watch-view");
+chatOn=false;emojiOn=false;
+if(!watchBuilt){
+$("watch-view").innerHTML='<div class="watch-wrap"><div class="watch-nav"><button class="back-btn" id="w-leave">&#8249; Leave</button><div class="w-center"><span class="w-title" id="w-film-title"></span><div class="w-status"><div class="st-dot on" style="width:6px;height:6px"></div><span id="w-watchers"></span></div></div><button class="done-btn" id="w-done">Done</button></div><div class="video-area"><div class="video-frame" id="vf"></div><div class="controls"><button class="ctrl-btn" id="pp"></button><div class="ctrl-div"></div><button class="ctrl-btn" id="et" style="background:var(--s1);font-size:18px">&#128522;</button><div id="emoji-tray-wrap"></div><button class="chat-btn" id="ct">&#128172;</button></div></div><div id="chat-wrap"></div></div>';
+$("w-leave").addEventListener("click",()=>{socket.emit("stop-video");showHome()});
+$("w-done").addEventListener("click",openRating);
+$("pp").addEventListener("click",()=>{st.playing=!st.playing;socket.emit(st.playing?"play":"pause");updatePlayBtn()});
+$("et").addEventListener("click",()=>{emojiOn=!emojiOn;updateEmojiTray()});
+$("ct").addEventListener("click",()=>{chatOn=!chatOn;updateChat()});
+watchBuilt=true;
+}
+$("w-film-title").textContent=st.title;
+updateWatchers();updatePlayBtn();updateVideo();updateEmojiTray();updateChat();
+}
+function updateVideo(){
+const vf=$("vf");if(!vf)return;
+const existing=vf.querySelector("iframe");
+if(existing&&existing.src===st.url)return;
+if(st.url){vf.innerHTML='<iframe src="'+st.url+'" allow="autoplay;fullscreen;encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups"></iframe>';}
+else{vf.innerHTML='<div class="placeholder"><div class="ph-icon">&#9654;</div><span class="ph-text">Paste a URL to start</span></div>';}
+}
+function updatePlayBtn(){
+const pp=$("pp");if(!pp)return;
+pp.innerHTML=st.playing?'<svg width="16" height="16" viewBox="0 0 16 16"><rect x="3" y="2" width="4" height="12" rx="1" fill="white"/><rect x="9" y="2" width="4" height="12" rx="1" fill="white"/></svg>':'<svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 2.5V13.5L13 8L4 2.5Z" fill="white"/></svg>';
+}
+function updateWatchers(){const el=$("w-watchers");if(el)el.textContent=users.length+" watching · In sync";}
+function updateStatus(){updateWatchers();if(!$("home-view").classList.contains("hidden"))showHome();}
+function updateEmojiTray(){
+const wrap=$("emoji-tray-wrap");if(!wrap)return;
+const et=$("et");
+if(emojiOn){et.textContent="&#10005;";wrap.innerHTML='<div class="emoji-tray">'+EM.map(e=>'<button data-em="'+e+'">'+e+'</button>').join('')+'</div>';wrap.querySelectorAll("[data-em]").forEach(b=>b.addEventListener("click",()=>{socket.emit("emoji",b.dataset.em);spawnEmoji(b.dataset.em)}));}
+else{et.textContent="&#128522;";wrap.innerHTML="";}
+}
+function updateChat(){
+const wrap=$("chat-wrap");if(!wrap)return;
+if(!chatOn){wrap.innerHTML="";return}
+wrap.innerHTML='<div class="chat-panel"><div class="chat-head"><span>Messages</span><button class="chat-x" id="cx">&#10005;</button></div><div class="chat-body" id="cb">'+msgs.map(m=>'<div class="msg-row'+(m.user===me?" me":"")+'"><div class="msg-bub"><span class="msg-name">'+esc(m.user)+'</span><span class="msg-txt">'+esc(m.text)+'</span></div></div>').join('')+'</div><div class="chat-foot"><input id="ci" placeholder="Message..." autocomplete="off"><button class="send-btn" id="cs">&#8593;</button></div></div>';
+$("cx").addEventListener("click",()=>{chatOn=false;updateChat()});
+$("ci").addEventListener("keydown",e=>{if(e.key==="Enter")sendMsg()});
+$("cs").addEventListener("click",sendMsg);
+const cb=$("cb");if(cb)cb.scrollTop=cb.scrollHeight;
+$("ci").focus();
+}
+function appendMsg(m){
+if(!chatOn)return;
+const cb=$("cb");if(!cb)return;
+const div=document.createElement("div");
+div.className="msg-row"+(m.user===me?" me":"");
+div.innerHTML='<div class="msg-bub"><span class="msg-name">'+esc(m.user)+'</span><span class="msg-txt">'+esc(m.text)+'</span></div>';
+cb.appendChild(div);cb.scrollTop=cb.scrollHeight;
+}
+function sendMsg(){const ci=$("ci");if(!ci||!ci.value.trim())return;socket.emit("chat-message",ci.value.trim());ci.value="";}
+function spawnEmoji(emoji){
+const vf=$("vf");if(!vf)return;
+const el=document.createElement("div");
+el.className="floating-emoji";el.textContent=emoji;
+el.style.left=(15+Math.random()*70)+"%";el.style.bottom="60px";
+vf.appendChild(el);setTimeout(()=>el.remove(),2200);
+}
+function openRating(){rating=0;$("rate-film-title").textContent=st.title;$("rate-overlay").classList.remove("hidden");buildDots();updateRatingDisplay();}
+function closeRating(){$("rate-overlay").classList.add("hidden");rating=0;}
+function buildDots(){
+const wrap=$("rdots");wrap.innerHTML="";
+for(let i=1;i<=10;i++){
+const btn=document.createElement("button");
+btn.className="rdot";btn.textContent=i;btn.dataset.n=i;
+btn.addEventListener("click",()=>{rating=i;updateDotStyles();updateRatingDisplay()});
+btn.addEventListener("mouseenter",()=>{updateDotStyles(i)});
+btn.addEventListener("mouseleave",()=>{updateDotStyles()});
+wrap.appendChild(btn);
+}
+}
+function updateDotStyles(hover){
+const active=hover||rating;
+document.querySelectorAll(".rdot").forEach(d=>{const n=+d.dataset.n;d.classList.toggle("on",n<=active);});
+$("rval").innerHTML=((hover||rating)||"&#8212;")+'<span>/10</span>';
+}
+function updateRatingDisplay(){$("rval").innerHTML=(rating||"&#8212;")+'<span>/10</span>';$("rate-save").disabled=!rating;}
+$("rate-skip").addEventListener("click",()=>{closeRating();socket.emit("stop-video");showHome()});
+$("rate-save").addEventListener("click",()=>{if(!rating)return;socket.emit("rate-film",{title:st.title,url:st.url,rating});closeRating();});
+function showHist(){
+show("hist-view");
+const avg=hist.length?(hist.reduce((a,h)=>a+h.rating,0)/hist.length).toFixed(1):"0";
+$("hist-view").innerHTML='<div class="hist-wrap"><nav class="hist-nav"><button class="back-btn" id="hback">&#8249; Back</button><h1 class="hist-title">Watch History</h1><div style="width:60px"></div></nav><div class="hist-stats"><div class="stat-card"><span class="stat-num">'+hist.length+'</span><span class="stat-lbl">Films</span></div><div class="stat-card"><span class="stat-num">'+avg+'</span><span class="stat-lbl">Avg Rating</span></div><div class="stat-card"><span class="stat-num">'+hist.filter(h=>h.favorite).length+'</span><span class="stat-lbl">Favorites</span></div></div><div class="hist-list">'+(hist.length?hist.map(f=>{const rr=Object.entries(f.ratedBy||{});return'<div class="hist-card"><div class="hist-poster">&#127916;</div><div class="hist-info"><span class="hist-name">'+esc(f.title)+'</span><span class="hist-meta">'+f.date+'</span></div><div class="hist-scores">'+rr.map(([n,s],i)=>(i?'<div class="hist-sd"></div>':'')+'<div class="hist-sp"><span class="hist-sl">'+esc(n)+'</span><span class="hist-sv">'+s+'</span></div>').join('')+'</div><button class="hist-fav" data-fid="'+f.id+'">'+(f.favorite?"&#9733;":"&#9734;")+'</button></div>';}).join(''):'<p class="empty-msg">No films watched yet!</p>')+'</div></div>';
+$("hback").addEventListener("click",showHome);
+document.querySelectorAll("[data-fid]").forEach(b=>b.addEventListener("click",()=>socket.emit("toggle-favorite",+b.dataset.fid)));
+}
+})();
+</script>
+</body>
+</html>
